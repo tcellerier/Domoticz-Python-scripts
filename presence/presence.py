@@ -14,7 +14,6 @@ sys.path.append('/home/pi/domoticz/scripts/python/') # .. = dossier parent
 from library_credentials import *
 
 
-
 # Liste des adresses MAC dont on va tester la présence
 macAddresses = { "XX:XX:XX:XX:XX:XX" }
 
@@ -24,8 +23,14 @@ def mac_detect(pkt):
     if not pkt.haslayer(Ether):
         return
 
-    min_delay = 60    # delai minimum en secondes pour la prise en compte d'un nouveau paquet
     now = datetime.now()
+
+    # On sort du script si on n'est pas dans la tranche horaire 10h - minuit
+    if not now.hour >= 10:
+        return
+
+    min_delay = 60    # delai minimum en secondes pour la prise en compte d'un nouveau paquet
+    
     mac = pkt[Ether].src
     if not (mac in lasttime):   # 1ere fois que l'adresse MAC est détectée
         delay_lastpush = 999
@@ -36,7 +41,7 @@ def mac_detect(pkt):
     if delay_lastpush >= min_delay:
         lasttime[mac] = now
         
-        # Actions à déclencher
+        ###  Actions à déclencher  ###
         #print str(now) + " " + mac + " adresse mac source détectée"
         os.system('curl --user ' + domoticzCredentials + ' "http://127.0.0.1/json.htm?type=command&param=updateuservariable&vname=Script_Presence_Maison&vtype=0&vvalue=1" &') 
     
