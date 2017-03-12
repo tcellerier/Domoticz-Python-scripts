@@ -10,12 +10,17 @@ from datetime import datetime
 
 # Credentials
 import sys
-sys.path.append('..') # .. = dossier parent
+sys.path.append('/home/pi/domoticz/scripts/python/') # .. = dossier parent
 from library_credentials import *
 
 
+
+# iPhone 6S CC:20:E8:C7:5B:E7
+# Sony Nedra 
+# MBP 20:c9:d0:44:ad:99
+
 # Liste des adresses MAC dont on va tester la présence
-macAddresses = { "XX:XX:XX:XX:XX:XX", "XX:XX:XX:XX:XX:XX" }
+macAddresses = { "CC:20:E8:C7:5B:E7" }
 
 
 def mac_detect(pkt):
