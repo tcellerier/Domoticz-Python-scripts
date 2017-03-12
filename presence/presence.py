@@ -15,12 +15,8 @@ from library_credentials import *
 
 
 
-# iPhone 6S CC:20:E8:C7:5B:E7
-# Sony Nedra 
-# MBP 20:c9:d0:44:ad:99
-
 # Liste des adresses MAC dont on va tester la présence
-macAddresses = { "CC:20:E8:C7:5B:E7" }
+macAddresses = { "XX:XX:XX:XX:XX:XX" }
 
 
 def mac_detect(pkt):
