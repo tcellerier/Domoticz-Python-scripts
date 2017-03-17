@@ -6,7 +6,7 @@
 # sudo apt-get install tcpdump
 
 from scapy.all import * 
-from datetime import datetime
+import datetime
 
 # Credentials
 import sys
@@ -25,7 +25,7 @@ def mac_detect(pkt):
     if not pkt.haslayer(Ether):
         return
 
-    now = datetime.now()
+    now = datetime.datetime.now()
 
     # On sort du script si on n'est pas dans la tranche horaire 10h - minuit
     if not now.hour >= 10:
@@ -34,14 +34,10 @@ def mac_detect(pkt):
     min_delay = 60    # delai minimum en secondes pour la prise en compte d'un nouveau paquet
     
     mac = pkt[Ether].src
-    if not (mac in lasttime):   # 1ere fois que l'adresse MAC est détectée
-        delay_lastpush = 999
-    else:
-        delay_lastpush = (now - lasttime[mac]).total_seconds() # nombre de secondes.microsecondes
-
+    delay_lastpush = (now - lasttime).total_seconds() # nombre de secondes.microsecondes
 
     if delay_lastpush >= min_delay:
-        lasttime[mac] = now
+        lasttime = now
         
         ###  Actions à déclencher  ###
         #print str(now) + " " + mac + " adresse mac source détectée"
@@ -52,7 +48,7 @@ def mac_detect(pkt):
 def startSniff():
 
     global lasttime
-    lasttime = {}
+    lasttime = datetime.datetime.now() - datetime.timedelta(days = 1) # On initialise la variable lasttime 
 
     sniff_filters = " or ".join(["ether src host " + mac for mac in macAddresses]) 
     print "Sniffing started"
