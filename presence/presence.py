@@ -19,7 +19,9 @@ macAddresses = { "XX:XX:XX:XX:XX:XX" }
 
 
 def mac_detect(pkt):
-   
+
+    global lasttime
+
     if not pkt.haslayer(Ether):
         return
 
