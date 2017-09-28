@@ -41,9 +41,11 @@ def arlo_switch(command, i = 0):
         time.sleep(1)
         print("ARLO -- Camera modes: " + str(base.available_modes))
         
-        #time.sleep(1)
-        #cam_battery = arlo.cameras[0].get_battery_level
-        #print("ARLO -- Camera Battery: " + str(cam_battery) + " %")
+        time.sleep(1)
+        cam_battery = arlo.cameras[0].get_battery_level
+        print("ARLO -- Camera Battery: " + str(cam_battery) + " % -> into file /tmp/arlo_cam1.txt")
+        with open('/tmp/arlo_cam1.txt', 'w') as f:
+            f.write(str(cam_battery)) 
 
     # On tente d'exécuter la commande 5 fois maximum
     except:
