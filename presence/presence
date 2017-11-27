@@ -11,23 +11,31 @@
 # Description:       Python script pour détecter la présence Domoticz via adresse MAC des téléphones
 ### END INIT INFO
 
+NAME=presence
+PIDFILE=/var/run/$NAME.pid
 
 case "$1" in 
     start)
-        echo "Starting presence"
+        echo "Starting presence.py"
         echo "  python /home/pi/domoticz/scripts/python/presence/presence.py &"
         python /home/pi/domoticz/scripts/python/presence/presence.py &
+        # Get its PID and store it
+        echo $! > $PIDFILE 
         ;;
+
     stop)
-        echo "Stopping presence"
+        echo "Stopping presence.py"
         echo '  pkill -f "python /home/pi/domoticz/scripts/python/presence/presence.py"'
         pkill -f "python /home/pi/domoticz/scripts/python/presence/presence.py"
+        rm -rf $PIDFILE 
         ;;
-	reload|restart)
-		$0 stop
-		sleep 1
-		$0 start
-		;;
+
+    reload|restart)
+        $0 stop
+        sleep 2
+        $0 start
+        ;;
+
     *)
         echo "Usage: $0 {start|stop|reload|restart}"
         exit 1
