@@ -11,33 +11,44 @@
 # Description:       Python script pour détecter la présence Domoticz via adresse MAC des téléphones
 ### END INIT INFO
 
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
 NAME=presence
+PYTHON_SCRIPT="python /home/pi/domoticz/scripts/python/presence/presence.py"
 PIDFILE=/var/run/$NAME.pid
 
 case "$1" in 
+
     start)
-        echo "Starting presence.py"
-        echo "  python /home/pi/domoticz/scripts/python/presence/presence.py &"
-        python /home/pi/domoticz/scripts/python/presence/presence.py &
+        if [ -a "$PIDFILE" ]; then  # Exit if the pid file already exists
+            echo "$NAME is already running" 
+            exit 0
+        fi
+        echo "Starting $NAME ..."
+        echo "  $PYTHON_SCRIPT &"
+        $PYTHON_SCRIPT &
         # Get its PID and store it
         echo $! > $PIDFILE 
         ;;
 
     stop)
-        echo "Stopping presence.py"
-        echo '  pkill -f "python /home/pi/domoticz/scripts/python/presence/presence.py"'
-        pkill -f "python /home/pi/domoticz/scripts/python/presence/presence.py"
+        echo "Stopping $NAME ..."
+        echo '  pkill -f "'$PYTHON_SCRIPT'"'
+        pkill -f "$PYTHON_SCRIPT"
         rm -rf $PIDFILE 
         ;;
 
     reload|restart)
         $0 stop
-        sleep 2
+        sleep 3
         $0 start
         ;;
 
+    status)
+        ps aux | head -1; ps aux | grep "$PYTHON_SCRIPT" | grep -v "grep $PYTHON_SCRIPT"
+        ;;
+
     *)
-        echo "Usage: $0 {start|stop|reload|restart}"
+        echo "Usage: $0 {start|stop|reload|restart|status}"
         exit 1
         ;;
 esac
