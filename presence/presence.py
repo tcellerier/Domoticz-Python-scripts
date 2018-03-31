@@ -22,18 +22,27 @@ def mac_detect(pkt):
 
     global lasttime
 
-    if not pkt.haslayer(Ether):
+    # Show all the packet
+    # print(pkt.show()) 
+
+    # Lecture de l'adresse mac dans le paquet
+    mac = ""
+    if pkt.haslayer(Ether):
+        mac = pkt[Ether].src
+    elif  pkt.haslayer(Dot11): # Layer 802.11
+        mac = pkt[Dot11].addr2
+
+    if mac == "":
         return
 
     now = datetime.datetime.now()
-
-    # On sort du script si on n'est pas dans la tranche horaire 10h - minuit
-    if not now.hour >= 10:
-        return
-
-    min_delay = 60    # delai minimum en secondes pour la prise en compte d'un nouveau paquet
+    min_delay = 30    # delai minimum en secondes pour la prise en compte d'un nouveau paquet
+  
+    # On sort du script si on n'est pas dans la tranche horaire 8h - 23h59
+    #if not now.hour >= 8:
+    #    return
     
-    mac = pkt[Ether].src
+    
     delay_lastpush = (now - lasttime).total_seconds() # nombre de secondes.microsecondes
 
     if delay_lastpush >= min_delay:
@@ -45,18 +54,21 @@ def mac_detect(pkt):
     
 
 
-def startSniff():
-
-    global lasttime
+def initSniff():
+    global lasttime, sniff_filters
     lasttime = datetime.datetime.now() - datetime.timedelta(days = 1) # On initialise la variable lasttime 
+    sniff_filters = " or ".join(["ether src host " + mac for mac in macAddressesWifi]) 
 
-    sniff_filters = " or ".join(["ether src host " + mac for mac in macAddresses]) 
-    print "Sniffing started"
-    print(sniff(prn=mac_detect, filter=sniff_filters, store=0))
 
+def startSniff(iface = "eth0"):
+    #lasttime = vlasttime.value
+    print("Sniffing started on %s ..." % iface)
+    print(sniff(iface=iface, prn=mac_detect, filter=sniff_filters, store=0))
 
 
 if __name__ == '__main__':
-    startSniff()
 
+    initSniff()
 
+    Process(target=startSniff,  args=('eth0', )).start()
+    Process(target=startSniff,  args=('mon0', )).start()
