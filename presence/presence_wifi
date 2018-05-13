@@ -1,24 +1,25 @@
 #!/bin/bash
-# /etc/init.d/presence
+# /etc/init.d/presence_wifi
 
 ### BEGIN INIT INFO
-# Provides:          presence
+# Provides:          presence_wifi
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: presence
-# Description:       Python script pour détecter la présence Domoticz via adresse MAC des téléphones
+# Short-Description: presence_wifi
+# Description:       Python3 script pour détecter la présence Domoticz via paquets Wifi des téléphones
 ### END INIT INFO
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME=presence
-PYTHON_SCRIPT="python /home/pi/domoticz/scripts/python/presence/presence.py"
+NAME=presence_wifi
+PYTHON_SCRIPT="python3 /home/pi/domoticz/scripts/python/presence/presence_wifi.py"
 PIDFILE=/var/run/$NAME.pid
 
 case "$1" in 
 
     start)
+        sleep 3
         if [ -a "$PIDFILE" ]; then  # Exit if the pid file already exists
             echo "$NAME is already running" 
             exit 0
@@ -39,7 +40,6 @@ case "$1" in
 
     reload|restart)
         $0 stop
-        sleep 3
         $0 start
         ;;
 
