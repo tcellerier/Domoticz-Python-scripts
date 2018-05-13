@@ -1,10 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 # script requires:
 # library scapy: pip install --user scapy
 # sudo apt-get install tcpdump
 
+from multiprocessing import Process, Value
 from scapy.all import * 
 import datetime
 
@@ -14,8 +15,8 @@ sys.path.append('/home/pi/domoticz/scripts/python/') # .. = dossier parent
 from library_credentials import *
 
 
-# Liste des adresses MAC dont on va tester la présence
-macAddresses = { "XX:XX:XX:XX:XX:XX" }
+#########   Wifi   #########
+macAddressesWifi = { "XX:XX:XX:XX:XX:XX" }
 
 
 def mac_detect(pkt):
@@ -41,17 +42,17 @@ def mac_detect(pkt):
     # On sort du script si on n'est pas dans la tranche horaire 8h - 23h59
     #if not now.hour >= 8:
     #    return
-    
-    
+
+
     delay_lastpush = (now - lasttime).total_seconds() # nombre de secondes.microsecondes
 
     if delay_lastpush >= min_delay:
         lasttime = now
         
         ###  Actions à déclencher  ###
-        #print str(now) + " " + mac + " adresse mac source détectée"
-        os.system('curl --user ' + domoticzCredentials + ' "http://127.0.0.1/json.htm?type=command&param=updateuservariable&vname=Script_Presence_Maison&vtype=0&vvalue=1" &') 
-    
+        #print(str(now) + " " + mac + " adresse mac source détectée")
+        os.system('echo ' + str(now) + ' mac ' + mac + ' detectee >> /home/pi/domoticz/scripts/python/presence/testiphone.log')
+  
 
 
 def initSniff():
@@ -66,9 +67,12 @@ def startSniff(iface = "eth0"):
     print(sniff(iface=iface, prn=mac_detect, filter=sniff_filters, store=0))
 
 
+
 if __name__ == '__main__':
 
     initSniff()
 
+    # A améliorer : partager 'lasttime' entre les process
     Process(target=startSniff,  args=('eth0', )).start()
     Process(target=startSniff,  args=('mon0', )).start()
+
