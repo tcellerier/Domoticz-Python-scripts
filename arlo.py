@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 
@@ -9,7 +9,7 @@
 
 import time
 import sys
-from pyarlo import PyArlo # Arlo Python library 
+from pyarlo import PyArlo # Arlo Python library https://github.com/tchellomello/python-arlo
 
 
 
@@ -17,9 +17,7 @@ def arlo_switch(command, i = 0):
     
     try:
         arlo  = PyArlo(ArloLogin, ArloPassword)
-        time.sleep(1)
         base = arlo.base_stations[0]  # get base station handle, assuming only 1 base station is available
-        time.sleep(1)
 
         print("ARLO -- Command: " + command)
 
@@ -27,34 +25,36 @@ def arlo_switch(command, i = 0):
             print("ARLO -- Camera current mode: " + base.mode)
 
         elif command == "on":
-            print("ARLO -- Camera old mode: " + base.mode)
+            #print("ARLO -- Camera old mode: " + base.mode)
             base.mode = 'armed'
             time.sleep(1)
             print("ARLO -- Camera new mode: " + base.mode)
 
         else:
-            print("ARLO -- Camera old mode: " + base.mode)
+            #print("ARLO -- Camera old mode: " + base.mode)
             base.mode = 'disarmed'
             time.sleep(1)
             print("ARLO -- Camera new mode: " + base.mode)
 
-        time.sleep(1)
-        print("ARLO -- Camera modes: " + str(base.available_modes))
-        
-        time.sleep(1)
-        cam_battery = arlo.cameras[0].get_battery_level
-        print("ARLO -- Camera Battery: " + str(cam_battery) + " % -> into file /tmp/arlo_cam1.txt")
-        with open('/tmp/arlo_cam1.txt', 'w') as f:
-            f.write(str(cam_battery)) 
-
-    # On tente d'exécuter la commande 5 fois maximum
+    # On tente d'exécuter la commande 8 fois maximum
     except:
-        if i < 5:
-            print("ARLO -- Connexion Error - new try ... (" + str(i+1) + "/5)")
+        if i < 8:
+            print("ARLO -- Connexion Error - new try ... (" + str(i+1) + "/8)")
             arlo_switch(command, i+1)
         else:
-            print("ARLO -- Connexion Error -- command failed. Exit")
+            print("ARLO -- Connexion Errors -- command failed " + str(i) + " times. Exit")
             raise SystemExit(1) # Return failure
+
+
+    #time.sleep(1)
+    #print("ARLO -- Camera modes: " + str(base.available_modes))
+    
+    # Enregistre l'état de la batterie
+    time.sleep(1)
+    cam_battery_level = arlo.cameras[0].battery_level # de 0 à 100
+    print("ARLO -- Camera Battery: " + str(cam_battery_level) + " % -> into file /tmp/arlo_cam1.txt")
+    with open('/tmp/arlo_cam1.txt', 'w') as f:
+        f.write(str(cam_battery_level)) 
 
 
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     ################
 
     
-    # Si pas d'arugment
+    # Si pas d'argument
     if len(sys.argv) <= 1:
         arlo_switch("off")
     else:
