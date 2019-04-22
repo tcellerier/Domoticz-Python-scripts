@@ -6,3 +6,4 @@
 
 ## Arlo
 * Arm / Disarm a camera Arlo
+* Execute actions based on motion detection
