@@ -145,7 +145,7 @@ if __name__ == "__main__":
     player_path = "/var/packages/AudioStation/target/bin/mplayer"
     volume_path = "/var/packages/AudioStation/target/bin/volume"
 
-    delay_alert = 500    # delai maximum en secondes pour considerer que 2 alertes sont consécutives
+    delay_alert = 300    # delai maximum en secondes pour considerer que 2 alertes sont consécutives
     ################
 
     # Si pas d'argument, on désarme la caméra
