@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
     # Synology NAS pour USB speakers
     nas_ip = "192.168.99.4"
-    tts_api_url = "http://api.voicerss.org/?key=9874f4eda5c44cca8600d1307adaaa21&f=44khz_16bit_mono&c=MP3&hl=fr-fr&src="
+    tts_api_url = "http://api.voicerss.org/?key=XXXXX&f=44khz_16bit_mono&c=MP3&hl=fr-fr&src="
     player_path = "/var/packages/AudioStation/target/bin/mplayer"
     volume_path = "/var/packages/AudioStation/target/bin/volume"
 
