@@ -1,19 +1,19 @@
 #!/bin/bash
-# /etc/init.d/presence_wifi
+# /etc/init.d/presence
 
 ### BEGIN INIT INFO
-# Provides:          presence_wifi
+# Provides:          presence
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: presence_wifi
-# Description:       Python3 script pour détecter la présence Domoticz via paquets Wifi des téléphones
+# Short-Description: presence
+# Description:       Python3 script pour détecter la présence Domoticz via sniff des paquets Wifi et ping Bluetooth
 ### END INIT INFO
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-NAME=presence_wifi
-PYTHON_SCRIPT="python3 /home/pi/domoticz/scripts/python/presence/presence_wifi.py"
+NAME=presence
+PYTHON_SCRIPT="python3 /home/pi/domoticz/scripts/python/presence/presence.py"
 PIDFILE=/var/run/$NAME.pid
 
 case "$1" in 
