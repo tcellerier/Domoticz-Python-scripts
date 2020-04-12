@@ -7,6 +7,7 @@
 ## Prerequesites
 * sudo apt-get install tcpdump
 * sudo pip3 install scapy
+* sudo apt-get install libbluetooth-dev
 * sudo apt-get install python-bluez
 * sudo pip3 install pybluez 
 * Pour écouter sur l'interface mon0 en mode monitor: See https://github.com/seemoo-lab/nexmon
